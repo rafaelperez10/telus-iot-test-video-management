@@ -1,0 +1,7 @@
+boto3~=1.28.38
+loguru~=0.7
+robotframework~=6.1
+requests~=2.31
+requests_ntlm
+robotframework-requests~=0.9
+robotframework-jsonlibrary~=0.5
