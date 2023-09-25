@@ -20,9 +20,9 @@ ${RESPONSE_API_JSON}
 &{JSON_HEADERS} =  Accept=application/json    Content-Type=application/json    charset=utf-8
 &{PROTO_HEADERS} =  Accept=application/x-protobuf    Content-Type=application/x-protobuf    charset=utf-8
 ${DEVICE_ID}
-${HOUSEHOLD_ID}
 ${VIDEO_DEVICE_API_URL}
 ${VIDEO_DEVICE_API_KEY}
+
 
 *** Keywords ***
 Get Initial Configuration and Values
@@ -32,11 +32,12 @@ Get Initial Configuration and Values
     Set Suite Variable  ${VIDEO_DEVICE_API_URL}     ${video_device_api_url}
     Set Suite Variable  ${VIDEO_DEVICE_API_KEY}     ${video_device_api_key}
 
+
 *** Test Cases ***
 
-[TST01] - Create a customer video devices
-    [Documentation]    Customer Video Device onboarding
-    [Tags]      Smoke   Creation
+[TST01] - Video Device Tenant API - Create new video device
+    [Documentation]    Will create new video device
+    [Tags]      Smoke10
 
 
     ${payload} =   Set Data Init
@@ -57,9 +58,9 @@ Get Initial Configuration and Values
 
 
 
-[TST02] - Get customer video devices list
+[TST02] - Video Device Tenant API - Get video devices list
     [Documentation]    Will retrive all the video devices by customer
-    [Tags]    Smoke
+    [Tags]    Smoke10
 
     &{json_headers_api}     Copy Dictionary       ${JSON_HEADERS}
     Set To Dictionary   ${json_headers_api}     x-api-key=${VIDEO_DEVICE_API_KEY}
@@ -69,3 +70,104 @@ Get Initial Configuration and Values
     Then Status Should Be   200      ${RESPONSE_API}
 
 
+[TST03] - Video Device Tenant API - Update atribute UpdateMaximunNumberOfWebRTCSessions by DeviceId
+
+    [Documentation]    Will update maximumNumberOfWebRTCSessions by deviceId
+    [Tags]    Smoke10
+
+    ${payload}=    Create Dictionary    maximumNumberOfWebRTCSessions=${RANDOM_NUMBER}
+    Log To Console    ${payload}
+    ${device_id}=    Set Variable   ${DEVICE_ID}
+    ${endpoint_url}=    Catenate    ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}/maxChannelSessions
+    &{json_headers_api}=    Copy Dictionary    ${JSON_HEADERS}
+    Set To Dictionary    ${json_headers_api}    x-api-key=${VIDEO_DEVICE_API_KEY}
+    ${response}=    PATCH    ${endpoint_url}    headers=${json_headers_api}    json=${payload}
+    ${body}=    Convert To String    ${response.content}
+    Log To Console   ${body}
+    Status Should Be    200    ${response}
+    ${response_list}=  Get Id Request   ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}  headers=${json_headers_api}
+    ${body_list}=  Convert To String  ${response_list.content}
+    Status Should Be  200  ${response_list}
+    ${response_dict}=  Evaluate  json.loads('''${body_list}''')  json
+    ${maximum_sessions}=  Get From Dictionary  ${response_dict}  maximumNumberOfWebRTCSessions
+    Should Be Equal As Integers  ${maximum_sessions}  ${payload}
+
+
+
+[TST04] - Video Device Tenant API - Update atribute RetantionPeriod by deviceId
+
+    [Documentation]    Will update retentionPeriod by deviceId
+    [Tags]    Smoke10
+
+    ${payload}=    Create Dictionary    videoRetentionPeriodInHours=${RANDOM_NUMBER}
+    Log To Console    ${payload}
+    ${device_id}=    Set Variable    ${DEVICE_ID}
+    ${endpoint_url}=    Catenate    ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}/retentionPeriod
+    &{json_headers_api}=    Copy Dictionary    ${JSON_HEADERS}
+    Set To Dictionary    ${json_headers_api}    x-api-key=${VIDEO_DEVICE_API_KEY}
+    ${response}=    PATCH    ${endpoint_url}    headers=${json_headers_api}    json=${payload}
+    ${body}=    Convert To String    ${response.content}
+    Log To Console   ${body}
+    ${response_list}=  Get Id Request   ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}  headers=${json_headers_api}
+    ${body_list}=  Convert To String  ${response_list.content}
+    Status Should Be  200  ${response_list}
+    ${response_dict}=  Evaluate  json.loads('''${body_list}''')  json
+    ${video_retantion}=  Get From Dictionary  ${response_dict}  videoRetentionPeriodInHours
+    Log To Console  Video Retention: ${video_retantion}
+    Should Be Equal As Integers  ${video_retantion}  ${payload}
+
+[TST05] - Video Device Tenant API - Update atribute status by deviceId
+
+    [Documentation]    Will update status by deviceId
+    [Tags]    Smoke01
+
+    ${payload}=    Create Dictionary    status=${LIFE_CYCLE_TYPE}
+    Log To Console    ${payload}
+    ${device_id}=    Set Variable    copotest
+    ${endpoint_url}=    Catenate    ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}/status
+    &{json_headers_api}=    Copy Dictionary    ${JSON_HEADERS}
+    Set To Dictionary    ${json_headers_api}    x-api-key=${VIDEO_DEVICE_API_KEY}
+    ${response}=    PATCH    ${endpoint_url}    headers=${json_headers_api}    json=${payload}
+    ${body}=    Convert To String    ${response.content}
+    Log To Console   ${body}
+    Status Should Be    200    ${response}
+    ${response_list}=  Get Id Request   ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}  headers=${json_headers_api}
+    ${body_list}=  Convert To String  ${response_list.content}
+    Status Should Be  200  ${response_list}
+    ${response_dict}=  Evaluate  json.loads('''${body_list}''')  json
+    ${status_device}=  Get From Dictionary  ${response_dict}  status
+    Should Be Equal As Strings   ${status_device}  ${payload}
+
+
+[TST06] - Video Device Tenant API - Delete video device by deviceId
+
+    [Documentation]    Will delete video devices by deviceId
+    [Tags]    Smoke01
+
+    ${device_id}=    Set Variable   ${DEVICE_ID}
+    Log To Console    ${device_id}
+    ${endpoint_url} =  Catenate     ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}
+    &{json_headers_api}     Copy Dictionary       ${JSON_HEADERS}
+    Set To Dictionary   ${json_headers_api}     x-api-key=${VIDEO_DEVICE_API_KEY}
+    ${response}=  DELETE  ${endpoint_url}   headers=${json_headers_api}
+    ${body}=  Convert To String  ${response.content}
+    Log To Console   ${body}
+    Status Should Be  200  ${response}
+    ${response_list}=  Get Id Request   ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}  headers=${json_headers_api}
+    Status Should Be  400  ${response_list}
+
+
+[TST07] - Video Device Tenant API - Get video device by deviceId
+
+    [Documentation]    Will get video devices by deviceId
+    [Tags]    Smoke10
+
+    ${device_id}=    Set Variable   ${DEVICE_ID}
+    Log To Console    ${device_id}
+    ${endpoint_url} =  Catenate     ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}
+    &{json_headers_api}     Copy Dictionary       ${JSON_HEADERS}
+    Set To Dictionary   ${json_headers_api}     x-api-key=${VIDEO_DEVICE_API_KEY}
+    ${response}=  Get Id Request  ${endpoint_url}   headers=${json_headers_api}
+    ${body}=  Convert To String  ${response.content}
+    Log To Console   ${body}
+    Status Should Be  200  ${response}

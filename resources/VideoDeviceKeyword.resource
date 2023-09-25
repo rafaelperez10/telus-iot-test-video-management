@@ -28,3 +28,32 @@ Get Video Device Url and Key
     [Arguments]    ${api_name}
     &{video_play_data}=     Video API Gateway      ${api_name}
     [Return]    &{video_play_data}
+
+Check Response Status
+    [Arguments]    ${response}    ${expected_status}
+    Should Be Equal As Integers    ${response.status_code}    ${expected_status}
+
+Patch Request
+    [Arguments]    ${url}    ${headers}    ${json}
+    ${response}=    Patch    ${url}    headers=${headers}    json=${json}
+    [Return]        ${response}
+
+Delete Request
+    [Arguments]    ${url}    ${headers}
+    ${response}=    Delete    ${url}    headers=${headers}
+    [Return]        ${response}
+
+Get Id Request
+    [Arguments]    ${url}    ${headers}
+    ${response}=    GET    ${url}    headers=${headers}
+    [Return]        ${response}
+
+Random Number
+    ${random_number}=    Random Number
+    Set Global Variable    ${RANDOM_NUMBER}   ${random_number}
+    [Return]    ${RANDOM_NUMBER}
+
+Life Cycle Type
+    ${life_cycle_type}=    Life Cycle Type
+    Set Global Variable    ${LIFE_CYCLE_TYPE}   ${life_cycle_type}
+    [Return]    ${LIFE_CYCLE_TYPE}

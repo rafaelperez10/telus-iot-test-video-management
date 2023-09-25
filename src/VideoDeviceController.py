@@ -16,7 +16,7 @@ class VideoDeviceController:
         device = Device()
         device.deviceId = str(randint(10000000000, 999999999999))
         device.householdId = "api-" + VideoDeviceController.get_random_uuid(10) \
-                             + "-" + VideoDeviceController.get_random_uuid(7)\
+                             + "-" + VideoDeviceController.get_random_uuid(7) \
                              + "-auto-test"
         device.videoRetentionPeriodInHours = randint(1, 720)
         device.maximumNumberOfWebRTCSessions = randint(1, 9)
@@ -28,7 +28,7 @@ class VideoDeviceController:
         device = EventBusDevice()
         device.deviceId = str(randint(10000000000, 999999999999))
         device.householdId = "event-" + VideoDeviceController.get_random_uuid(10) \
-                             + "-" + VideoDeviceController.get_random_uuid(7)\
+                             + "-" + VideoDeviceController.get_random_uuid(7) \
                              + "-auto-test"
         device.alias = VideoDeviceController.get_random_uuid(7) + "-auto-test"
         device.videoRetentionPeriodInHours = randint(1, 720)
@@ -52,9 +52,8 @@ class VideoDeviceController:
                 list_event_type = ['WSS', 'HTTPS']
         return list_event_type
 
-
-# AWS SERVICES
-# EVENTBRIDGE
+    # AWS SERVICES
+    # EVENTBRIDGE
     @staticmethod
     def put_event_bridge_message(event_source, event_type, event_message, event_bus_name):
         event_bridge = EventBridge()
@@ -65,28 +64,32 @@ class VideoDeviceController:
         kinesis_video = KinesisVideo()
         result = True
 
-        device_stream = 'SH20-deviceStream-'+device_id
+        device_stream = 'SH20-deviceStream-' + device_id
         result_device_stream = kinesis_video.get_list_streams(device_stream)
-        exist_device_stream = VideoDeviceController.validate_exist_streams(device_stream, "StreamName", result_device_stream.get('StreamInfoList'))
+        exist_device_stream = VideoDeviceController.validate_exist_streams(device_stream, "StreamName",
+                                                                           result_device_stream.get('StreamInfoList'))
         if not exist_device_stream:
             result = False
             return str(result)
 
-        event_stream = 'SH20-eventStream-'+device_id
+        event_stream = 'SH20-eventStream-' + device_id
         result_event_stream = kinesis_video.get_list_streams(event_stream)
-        exist_event_stream = VideoDeviceController.validate_exist_streams(event_stream, "StreamName", result_event_stream.get('StreamInfoList'))
+        exist_event_stream = VideoDeviceController.validate_exist_streams(event_stream, "StreamName",
+                                                                          result_event_stream.get('StreamInfoList'))
         if not exist_event_stream:
             result = False
 
-        manual_stream = 'SH20-manualStream-'+device_id
+        manual_stream = 'SH20-manualStream-' + device_id
         results_manual_stream = kinesis_video.get_list_streams(manual_stream)
-        exist_manual_stream = VideoDeviceController.validate_exist_streams(manual_stream, "StreamName", results_manual_stream.get('StreamInfoList'))
+        exist_manual_stream = VideoDeviceController.validate_exist_streams(manual_stream, "StreamName",
+                                                                           results_manual_stream.get('StreamInfoList'))
         if not exist_manual_stream:
             result = False
 
-        live_stream = 'SH20-liveChannel-'+device_id
+        live_stream = 'SH20-liveChannel-' + device_id
         result_live_stream = kinesis_video.get_signaling_channels(live_stream)
-        exist_live_stream = VideoDeviceController.validate_exist_streams(live_stream, "ChannelName", result_live_stream.get('ChannelInfoList'))
+        exist_live_stream = VideoDeviceController.validate_exist_streams(live_stream, "ChannelName",
+                                                                         result_live_stream.get('ChannelInfoList'))
         if not exist_live_stream:
             result = False
 
@@ -98,8 +101,22 @@ class VideoDeviceController:
         for i in range(len(stream_list)):
             dict_resp = stream_list[i]
             key_value = dict_resp.get(stream_key)
-            logger.info('key_value:'+key_value)
+            logger.info('key_value:' + key_value)
             if stream_name == key_value:
                 exist_stream = True
                 break
         return exist_stream
+
+    @staticmethod
+    def random_number():
+        return random.randint(1, 1000)
+
+    @staticmethod
+    def life_cycle_type():
+        selected = randint(0, 1)
+        match selected:
+            case 0:
+                list_cycle_type = ['ACTIVE']
+            case 1:
+                list_cycle_type = ['PAUSED']
+        return list_cycle_type
