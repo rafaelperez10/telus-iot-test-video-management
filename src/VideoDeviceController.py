@@ -108,11 +108,11 @@ class VideoDeviceController:
         return exist_stream
 
     @staticmethod
-    def random_number():
-        return random.randint(1, 1000)
+    def random_number_int():
+        return randint(1, 1000)
 
     @staticmethod
-    def life_cycle_type():
+    def life_cycle_list():
         selected = randint(0, 1)
         match selected:
             case 0:

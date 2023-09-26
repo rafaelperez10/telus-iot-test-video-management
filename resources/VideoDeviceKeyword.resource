@@ -49,11 +49,11 @@ Get Id Request
     [Return]        ${response}
 
 Random Number
-    ${random_number}=    Random Number
+    ${random_number}=    Random Number Int
     Set Global Variable    ${RANDOM_NUMBER}   ${random_number}
     [Return]    ${RANDOM_NUMBER}
 
 Life Cycle Type
-    ${life_cycle_type}=    Life Cycle Type
+    ${life_cycle_type}=    Life Cycle List
     Set Global Variable    ${LIFE_CYCLE_TYPE}   ${life_cycle_type}
     [Return]    ${LIFE_CYCLE_TYPE}

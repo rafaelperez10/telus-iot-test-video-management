@@ -73,8 +73,10 @@ Get Initial Configuration and Values
 [TST03] - Video Device Tenant API - Update atribute UpdateMaximunNumberOfWebRTCSessions by DeviceId
 
     [Documentation]    Will update maximumNumberOfWebRTCSessions by deviceId
-    [Tags]    Smoke10
+    [Tags]    Smoke9
 
+
+    ${RANDOM_NUMBER}=     Random Number
     ${payload}=    Create Dictionary    maximumNumberOfWebRTCSessions=${RANDOM_NUMBER}
     Log To Console    ${payload}
     ${device_id}=    Set Variable   ${DEVICE_ID}
@@ -99,6 +101,7 @@ Get Initial Configuration and Values
     [Documentation]    Will update retentionPeriod by deviceId
     [Tags]    Smoke10
 
+    ${RANDOM_NUMBER}=     Random Number
     ${payload}=    Create Dictionary    videoRetentionPeriodInHours=${RANDOM_NUMBER}
     Log To Console    ${payload}
     ${device_id}=    Set Variable    ${DEVICE_ID}
@@ -121,9 +124,10 @@ Get Initial Configuration and Values
     [Documentation]    Will update status by deviceId
     [Tags]    Smoke01
 
+    ${LIFE_CYCLE_TYPE}=     Life Cycle Type
     ${payload}=    Create Dictionary    status=${LIFE_CYCLE_TYPE}
     Log To Console    ${payload}
-    ${device_id}=    Set Variable    copotest
+    ${device_id}=    Set Variable    ${DEVICE_ID}
     ${endpoint_url}=    Catenate    ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}/status
     &{json_headers_api}=    Copy Dictionary    ${JSON_HEADERS}
     Set To Dictionary    ${json_headers_api}    x-api-key=${VIDEO_DEVICE_API_KEY}
