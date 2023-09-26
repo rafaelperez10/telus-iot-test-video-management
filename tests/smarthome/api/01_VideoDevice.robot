@@ -154,7 +154,7 @@ Get Initial Configuration and Values
     Log To Console   ${body}
     Status Should Be  200  ${response}
     ${response_list}=  Get Id Request   ${VIDEO_DEVICE_API_URL}/tenant-api/video-device/${device_id}  headers=${json_headers_api}
-    Status Should Be  400  ${response_list}
+    Status Should Be  404  ${response_list}
 
 
 [TST07] - Video Device Tenant API - Get video device by deviceId
