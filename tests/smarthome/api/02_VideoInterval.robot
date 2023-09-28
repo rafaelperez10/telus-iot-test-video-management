@@ -33,7 +33,7 @@ Get Initial Configuration and Values
 
 [TST10] - Video Intevals Unified API - GetVideoIntervals
     [Documentation]    Customer Video Device Playback Get Session and Endpoint List
-    [Tags]      Smoke
+    [Tags]      Smoke5
 
     ${video_interval_api_url}=      Get From Dictionary    ${VIDEO_INTERVAL}    url
     ${video_interval_api_key}=      Get From Dictionary    ${VIDEO_INTERVAL}    api_key

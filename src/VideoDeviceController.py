@@ -108,7 +108,7 @@ class VideoDeviceController:
         return exist_stream
 
     @staticmethod
-    def random_number_int():
+    def random_number_str():
         return randint(1, 1000)
 
     @staticmethod
@@ -116,7 +116,7 @@ class VideoDeviceController:
         selected = randint(0, 1)
         match selected:
             case 0:
-                list_cycle_type = ['ACTIVE']
+                list_cycle_type = 'ACTIVE'
             case 1:
-                list_cycle_type = ['PAUSED']
+                list_cycle_type = 'PAUSED'
         return list_cycle_type

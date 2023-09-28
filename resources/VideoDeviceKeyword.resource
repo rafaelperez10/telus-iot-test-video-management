@@ -49,7 +49,7 @@ Get Id Request
     [Return]        ${response}
 
 Random Number
-    ${random_number}=    Random Number Int
+    ${random_number}=    Random Number Str
     Set Global Variable    ${RANDOM_NUMBER}   ${random_number}
     [Return]    ${RANDOM_NUMBER}
 
